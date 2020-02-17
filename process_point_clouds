@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+BAG_PATH=$1
+TMP_PATH=$2
+for class in $BAG_PATH/*
+do
+	for instance in $class/*
+	do
+		echo "processing $(basename "$instance" .bag)..."
+		rosrun pcl_ros bag_to_pcd $instance /points2_filtered $TMP_PATH/$class/$(basename "$instance" .bag)/pcd &>/dev/null
+		python3 ./pcd_to_color_depth.py $TMP_PATH/$class/$(basename "$instance" .bag)/pcd 5 &>/dev/null
+	done
+done
